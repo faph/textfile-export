@@ -31,7 +31,7 @@ import org.w3c.dom.NodeList;
 public class TransformDefinition {
 
     private static final String TRANSFORMS_DEF_FILE
-            = java.util.ResourceBundle.getBundle("settings").getString("transformDefinitionsFile");
+            = java.util.ResourceBundle.getBundle("hec/dssgui/plugins/textfileexport/settings").getString("transformDefinitionsFile");
     private final int transformIndex;
     private final String parameter; //Individual TransformDefinitions should be created for different parameters (e.g. FLOW, STAGE).
     private String name;
