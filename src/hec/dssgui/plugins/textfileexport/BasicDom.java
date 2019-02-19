@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fap.dssgui.plugins.TimeSeriesExport;
+package hec.dssgui.plugins.textfileexport;
 
 import java.io.File;
 import java.io.IOException;

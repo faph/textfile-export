@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fap.dssgui.plugins.TimeSeriesExport;
+package hec.dssgui.plugins.textfileexport;
 
 import hec.dssgui.ListSelection;
 import hec.heclib.util.HecTime;
@@ -39,7 +39,7 @@ import javax.swing.table.AbstractTableModel;
 public class ExportDialog extends javax.swing.JDialog implements PropertyChangeListener {
 
     private static final String TRANSFORMS_DEF_FILE
-            = java.util.ResourceBundle.getBundle("fap/dssgui/plugins/TimeSeriesExport/settings").getString("transformDefinitionsFile");
+            = java.util.ResourceBundle.getBundle("hec/dssgui/plugins/textfileexport/settings").getString("transformDefinitionsFile");
     //messages
     private static final String NO_TS_SELECTED_WARNING = "Please select one or more time series datasets first.";
     private static final String NO_TS_FOUND_WARNING = "No time series datasets could be found.\n"
@@ -317,10 +317,11 @@ public class ExportDialog extends javax.swing.JDialog implements PropertyChangeL
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if ("progress" == propertyChangeEvent.getPropertyName()) {
+        if ("progress".equals(propertyChangeEvent.getPropertyName())) {
             Integer prog = (Integer) propertyChangeEvent.getNewValue();
-            exportProgress.setValue(prog.intValue());
+            exportProgress.setValue(prog);
         }
     }
 
@@ -483,6 +484,7 @@ public class ExportDialog extends javax.swing.JDialog implements PropertyChangeL
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 new ExportDialog(listSelection, true).setVisible(true);
             }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fap.dssgui.plugins.TimeSeriesExport;
+package hec.dssgui.plugins.textfileexport;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -172,7 +172,7 @@ public class XmlHandler {
 
         return result;
     }
-    
+
     public NodeList[] getNodeListNodes(String path) {
         NodeList[] result;
 
