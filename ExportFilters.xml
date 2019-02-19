@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This document defines the transforms to export timeseries data from HEC-DSSVue
+into text files. Each transform is defined by a unique name, file name settings, 
+data columns and optionally headers and footers. For the /file/name, the 
+header/line and the footer/line entries in this document, generic 'fields'
+can be used. These fields will be replaced by actual values when data is
+exported. For example, <field parameter="LOCATION" /> will be replaced by the location (B-part) of
+the time series dataset. 
+
+Possible field parameters are:
+"WATERSHED" or "CATCHMENT" (A-part)
+"LOCATION"  (B-part)
+"PARAMETER" (C-part, e.g. "FLOW")
+"ISISUNIT"  (ISIS boundary unit, e.g. "QTBDY")
+"RECORDCOUNT"   (number of records in exported data)
+"STARTTIME" (start time e.g. "01JUN07, 24:00")
+"ENDTIME"   (end time e.g. "01JUN07, 24:00")
+for numeric or date parameters, formats (see below) can be used.
+
+For data columns, the following variables can be used:
+time        (full date and time)
+value       (actual data values)
+hours       (time step, in hours)
+
+Valid formats for a time are for example:
+yyyy,M,d,H,m,s  (e.g. "2007,6,1,24,0,0")
+dd MMM yyyy     (e.g. "01 JUN 2007")
+
+Valid formats for a value or hours are for example:
+0.000       (e.g. 1.234)
+###0.000    (e.g. "   1.234", good for creating fixed-width columns) 
+-->
+<transforms>
+  <transform>
+    <name>PDM input data (*.csv)</name>
+    <file>
+      <name><field parameter="WATERSHED"/>_<field parameter="LOCATION"/>_<field parameter="PARAMETER"/>.csv</name>
+      <removeSpaces>true</removeSpaces>
+      <separateFiles>true</separateFiles>
+    </file>
+    <data>
+      <column>
+        <variable>time</variable>
+        <format>yyyy,M,d,H,m,s</format>
+        <separator>,</separator>
+      </column>
+      <column>
+        <variable>value</variable>
+        <format>0.000</format>
+        <missingValue>-999</missingValue>
+      </column>
+    </data>
+  </transform>
+  <transform>
+    <name>FEH AMAX file (*.am)</name>
+    <file>
+      <name><field parameter="LOCATION"/>.am</name>
+      <removeSpaces>false</removeSpaces>
+      <separateFiles>true</separateFiles>
+    </file>
+    <header>
+      <line>[STATION NUMBER]</line>
+      <line><field parameter="LOCATION"/></line>
+      <line>[END]</line>
+      <line>[AM Details]</line>
+      <line>Year Type,Water Year,Oct</line>
+      <line>[End]</line>
+      <line>[AM Values]</line>
+    </header>
+    <data>
+      <column>
+        <variable>time</variable>
+        <format>dd MMM yyyy</format>
+        <separator>,</separator>
+      </column>
+      <column>
+        <variable>value</variable>
+        <format>###0.000</format>
+      </column>
+    </data>
+    <footer>
+      <line>[END]</line>
+    </footer>
+  </transform>
+  <transform>
+    <name>FEH POT file (*.pt)</name>
+    <file>
+      <name><field parameter="LOCATION"/>.pt</name>
+      <removeSpaces>false</removeSpaces>
+      <separateFiles>true</separateFiles>
+    </file>
+    <header>
+      <line>[STATION NUMBER]</line>
+      <line><field parameter="LOCATION"/></line>
+      <line>[END]</line>
+      <line>[POT Details]</line>
+      <line>Record Period,<field parameter="STARTTIME" format="d MMM yyyy"/>,<field parameter="ENDTIME" format="d MMM yyyy"/></line>
+      <line>Threshold,0.000</line>
+      <line>[End]</line>
+      <line>[POT Values]</line>
+    </header>
+    <data>
+      <column>
+        <variable>time</variable>
+        <format>dd MMM yyyy</format>
+        <separator>,</separator>
+      </column>
+      <column>
+        <variable>value</variable>
+        <format>###0.000</format>
+      </column>
+    </data>
+    <footer>
+      <line>[END]</line>
+    </footer>
+  </transform>
+  <transform>
+    <name>ISIS event data file (*.ied)</name>
+    <file>
+      <name><field parameter="WATERSHED"/>_<field parameter="STARTTIME" format="ddMMMyyyy"/>.ied</name>
+      <removeSpaces>false</removeSpaces>
+      <separateFiles>false</separateFiles>
+    </file>
+    <header parameter="FLOW">
+      <line><field parameter="ISISUNIT"/> <field parameter="LOCATION"/>, t0=<field parameter="STARTTIME" format="ddMMMyyyy HH:mm"/></line>
+      <line><field parameter="LOCATION"/></line>
+      <line><field parameter="RECORDCOUNT" format="#########0"/>         0     0.000     HOURS    EXTEND    LINEAR     1.000</line>
+    </header>
+    <header parameter="STAGE">
+      <line><field parameter="ISISUNIT"/> <field parameter="LOCATION"/>, t0=<field parameter="STARTTIME" format="ddMMMyyyy HH:mm"/></line>
+      <line><field parameter="LOCATION"/></line>
+      <line><field parameter="RECORDCOUNT" format="#########0"/>         0     HOURS    EXTEND    LINEAR</line>
+    </header>
+    <data>
+      <column>
+        <variable>value</variable>
+        <format>#####0.000</format>
+      </column>
+      <column>
+        <variable>hours</variable>
+        <format>#####0.000</format>
+        <missingValue>0</missingValue>
+      </column>
+    </data>
+  </transform>
+  <transform>
+    <name>ISIS calibration data file (*.cal)</name>
+    <file>
+      <name><field parameter="WATERSHED"/>_<field parameter="STARTTIME" format="ddMMMyyyy"/>.cal</name>
+      <removeSpaces>false</removeSpaces>
+      <separateFiles>false</separateFiles>
+    </file>
+    <header level="FILE">
+      <line>HOURS #t0=<field parameter="STARTTIME" format="ddMMMyyyy HH:mm"/></line>
+    </header>
+    <header level="DATASET">
+      <line><field parameter="LOCATION"/> #This should be the ISIS node label at <field parameter="LOCATION"/></line>
+      <line><field parameter="PARAMETER"/></line>
+      <line><field parameter="RECORDCOUNT"/></line>
+    </header>
+    <data>
+      <column>
+        <variable>value</variable>
+        <format>#####0.000</format>
+        <missingValue/>
+      </column>
+      <column>
+        <variable>hours</variable>
+        <format>#####0.000</format>
+      </column>
+    </data>
+  </transform>
+</transforms>
+
