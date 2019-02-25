@@ -3,6 +3,10 @@ Text file export
 
 [HEC-DSSVue][HEC1] plugin for exporting time series data to plain text files.
 
+:warning: Inexperienced developer at work warning: you may see some pretty bad
+code in this repo. I was still at the hack-this-together-how-does-java-work 
+stage!
+
 Installation
 ------------
 
